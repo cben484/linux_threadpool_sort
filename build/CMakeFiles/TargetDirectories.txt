@@ -1,0 +1,6 @@
+/home/ywc/HPC/thread_pool_dj/thread-pool-sort/build/CMakeFiles/edit_cache.dir
+/home/ywc/HPC/thread_pool_dj/thread-pool-sort/build/CMakeFiles/rebuild_cache.dir
+/home/ywc/HPC/thread_pool_dj/thread-pool-sort/build/src/CMakeFiles/solver.dir
+/home/ywc/HPC/thread_pool_dj/thread-pool-sort/build/src/CMakeFiles/main.dir
+/home/ywc/HPC/thread_pool_dj/thread-pool-sort/build/src/CMakeFiles/edit_cache.dir
+/home/ywc/HPC/thread_pool_dj/thread-pool-sort/build/src/CMakeFiles/rebuild_cache.dir

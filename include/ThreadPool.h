@@ -2,6 +2,8 @@
 
 #include <functional>
 #include <future>
+#include <iostream>
+#include <iterator>
 #include <mutex>
 #include <queue>
 #include <thread>
@@ -15,12 +17,12 @@ private:
   class ThreadWorker {
   private:
     int m_id;
-    ThreadPool * m_pool;
-  public:
-    ThreadWorker(ThreadPool * pool, const int id)
-      : m_pool(pool), m_id(id) {
-    }
+    ThreadPool *m_pool;
 
+  public:
+    ThreadWorker(ThreadPool *pool, const int id) : m_id(id), m_pool(pool) {}
+
+    void printID() { std::cout << "Thread Worker ID: " << m_id << std::endl; }
     void operator()() {
       std::function<void()> func;
       bool dequeued;
@@ -44,20 +46,20 @@ private:
   std::vector<std::thread> m_threads;
   std::mutex m_conditional_mutex;
   std::condition_variable m_conditional_lock;
+
 public:
   ThreadPool(const int n_threads)
-    : m_threads(std::vector<std::thread>(n_threads)), m_shutdown(false) {
-  }
+      : m_shutdown(false), m_threads(std::vector<std::thread>(n_threads)) {}
 
   ThreadPool(const ThreadPool &) = delete;
   ThreadPool(ThreadPool &&) = delete;
 
-  ThreadPool & operator=(const ThreadPool &) = delete;
-  ThreadPool & operator=(ThreadPool &&) = delete;
+  ThreadPool &operator=(const ThreadPool &) = delete;
+  ThreadPool &operator=(ThreadPool &&) = delete;
 
   // Inits thread pool
   void init() {
-    for (int i = 0; i < m_threads.size(); ++i) {
+    for (unsigned i = 0; i < m_threads.size(); ++i) {
       m_threads[i] = std::thread(ThreadWorker(this, i));
     }
   }
@@ -66,26 +68,27 @@ public:
   void shutdown() {
     m_shutdown = true;
     m_conditional_lock.notify_all();
-    
-    for (int i = 0; i < m_threads.size(); ++i) {
-      if(m_threads[i].joinable()) {
+
+    for (unsigned i = 0; i < m_threads.size(); ++i) {
+      if (m_threads[i].joinable()) {
         m_threads[i].join();
       }
     }
   }
 
   // Submit a function to be executed asynchronously by the pool
-  template<typename F, typename...Args>
-  auto submit(F&& f, Args&&... args) -> std::future<decltype(f(args...))> {
+  template <typename F, typename... Args>
+  auto submit(F &&f, Args &&...args) -> std::future<decltype(f(args...))> {
     // Create a function with bounded parameters ready to execute
-    std::function<decltype(f(args...))()> func = std::bind(std::forward<F>(f), std::forward<Args>(args)...);
-    // Encapsulate it into a shared ptr in order to be able to copy construct / assign 
-    auto task_ptr = std::make_shared<std::packaged_task<decltype(f(args...))()>>(func);
+    std::function<decltype(f(args...))()> func =
+        std::bind(std::forward<F>(f), std::forward<Args>(args)...);
+    // Encapsulate it into a shared ptr in order to be able to copy construct /
+    // assign
+    auto task_ptr =
+        std::make_shared<std::packaged_task<decltype(f(args...))()>>(func);
 
     // Wrap packaged task into void function
-    std::function<void()> wrapper_func = [task_ptr]() {
-      (*task_ptr)(); 
-    };
+    std::function<void()> wrapper_func = [task_ptr]() { (*task_ptr)(); };
 
     // Enqueue generic wrapper function
     m_queue.enqueue(wrapper_func);
