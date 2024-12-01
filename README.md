@@ -17,13 +17,13 @@ xibaluoma
 Back to the threadpool:  
 version 1:  
 
->usage:
+>usage:  
 ./gen_test.sh 10000  
 cmake -Bbuild   
 cmake --build ./build  
 ./build/src/main data/ sorted.txt  
 
->output:
+>output:  
 file list write to filelist.txt.  
 delete tmp dir: /tmp/sort.  
 create tmp dir: /tmp/sort.  
