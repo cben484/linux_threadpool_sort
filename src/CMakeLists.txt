@@ -10,8 +10,8 @@ find_path(INCLUDE_DIR ThreadPool.h HINTS ${CMAKE_SOURCE_DIR}/include)
 add_library(
         solver 
         SHARED   
-        Merge.cpp 
-        Solver.cpp
+        ${CMAKE_SOURCE_DIR}/src/Handle/Merge.cpp
+        ${CMAKE_SOURCE_DIR}/src/Handle/Solver.cpp
     )
 target_include_directories(solver PUBLIC ${INCLUDE_DIR})
 

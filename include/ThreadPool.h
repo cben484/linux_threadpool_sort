@@ -3,9 +3,7 @@
 #include <functional>
 #include <future>
 #include <iostream>
-#include <iterator>
 #include <mutex>
-#include <queue>
 #include <thread>
 #include <utility>
 #include <vector>
