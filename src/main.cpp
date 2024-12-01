@@ -17,6 +17,8 @@
 using namespace std;
 
 int main(int argc, char *argv[]) {
+  std::cout << "C++ version: " << __cplusplus << std::endl;
+
   Solver s;
   Merge m;
 
