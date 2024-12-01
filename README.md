@@ -18,13 +18,9 @@ Back to the threadpool:
 version 1:
 
 >usage:
-
 ./gen_test.sh 10000
-
 cmake -Bbuild 
-
 cmake --build ./build
-
 ./build/src/main data/ sorted.txt
 
 >output:
